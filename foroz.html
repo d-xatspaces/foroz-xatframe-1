@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>foroz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chokokutai&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0b1a38 0%, #0f2550 35%, #163566 65%, #1b3f75 100%);
+        }
+
+        .scene {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ── Subtle grid ────────────────────────── */
+        .grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(to right, rgba(100, 180, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(100, 180, 255, 0.05) 1px, transparent 1px);
+            background-size: 64px 64px;
+            pointer-events: none;
+        }
+
+        /* ── Ambient glow spots ─────────────────── */
+        .glow-spot {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+            animation: glowPulse 7s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.25; transform: scale(1); }
+            50%      { opacity: 0.45; transform: scale(1.12); }
+        }
+
+        /* ── Mario-style clouds ─────────────────── */
+        .cloud {
+            position: absolute;
+            pointer-events: none;
+            animation: cloudDrift linear infinite;
+        }
+
+        .cloud-body {
+            position: relative;
+            display: inline-block;
+        }
+
+        .cloud-body svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 3px 0 rgba(80, 140, 220, 0.5))
+                    drop-shadow(0 6px 16px rgba(0, 30, 100, 0.25));
+        }
+
+        .cloud-base {
+            fill: #fff;
+        }
+
+        .cloud-shade {
+            fill: #d0e4ff;
+        }
+
+        .cloud-highlight {
+            fill: #f0f8ff;
+        }
+
+        .cloud-outline {
+            fill: none;
+            stroke: rgba(80, 130, 200, 0.6);
+            stroke-width: 2.5;
+            stroke-linejoin: round;
+        }
+
+        .cloud-eye {
+            fill: #1a3a6a;
+        }
+
+        .cloud-eye-shine {
+            fill: #fff;
+        }
+
+        /* Size variants */
+        .cloud.sm .cloud-body { width: 90px; height: 62px; }
+        .cloud.md .cloud-body { width: 140px; height: 95px; }
+        .cloud.lg .cloud-body { width: 195px; height: 130px; }
+
+        @keyframes cloudDrift {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(calc(100vw + 200px)); }
+        }
+
+        /* ── Soft wave decoration ───────────────── */
+        .wave {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 200%;
+            height: 120px;
+            pointer-events: none;
+            opacity: 0.08;
+            animation: waveSlide 18s linear infinite;
+        }
+
+        @keyframes waveSlide {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ── Logo ───────────────────────────────── */
+        .logo-area {
+            position: absolute;
+            left: 8%;
+            top: 50%;
+            transform: translateY(-50%) perspective(800px) rotateY(10deg);
+            transform-origin: right center;
+            z-index: 5;
+            animation: logoFloat 5.5s ease-in-out infinite;
+        }
+
+        .logo-text {
+            font-family: 'Chokokutai', cursive;
+            font-size: clamp(4rem, 8vw, 7.5rem);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 5px;
+            line-height: 1;
+            text-shadow:
+                0  1px 0 #dce8ff,
+                0  2px 0 #c8dfff,
+                0  3px 0 #b4d4ff,
+                0  4px 0 #a0c8ff,
+                0  5px 0 #8cbbfa,
+                0  6px 0 #78aef5,
+                0  7px 0 #64a1f0,
+                0  8px 0 #5094eb,
+                0  9px 0 #3d88e6,
+                0 10px 0 #2a7ce0,
+                0 12px 14px rgba(10, 50, 150, 0.45),
+                0 16px 30px rgba(20, 80, 200, 0.3),
+                0  0  60px rgba(90, 165, 255, 0.18);
+            user-select: text;
+        }
+
+        .logo-sub {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: rgba(170, 210, 255, 0.45);
+            letter-spacing: 4px;
+            margin-top: 10px;
+            margin-left: 6px;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(-50%) perspective(800px) rotateY(10deg); }
+            50%      { transform: translateY(calc(-50% - 10px)) perspective(800px) rotateY(10deg); }
+        }
+
+        /* ── Rules panel ────────────────────────── */
+        .rules-panel {
+            position: absolute;
+            top: 50%;
+            right: clamp(24px, 4vw, 64px);
+            transform: translateY(-50%) perspective(800px) rotateY(-10deg);
+            transform-origin: left center;
+            width: clamp(270px, 22vw, 370px);
+            z-index: 10;
+            perspective: 900px;
+        }
+
+        .rules-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 0 0 24px;
+            box-shadow:
+                0 24px 64px rgba(0, 0, 0, 0.18),
+                0  4px 12px rgba(0, 0, 0, 0.08),
+                0  0  40px rgba(60, 140, 255, 0.08);
+            transform-style: preserve-3d;
+            animation: cardTilt 7s ease-in-out infinite;
+            overflow: hidden;
+        }
+
+        @keyframes cardTilt {
+            0%, 100% { transform: rotateX(2deg) rotateY(-3deg); }
+            50%      { transform: rotateX(-1deg) rotateY(2deg) translateY(-6px); }
+        }
+
+        .rules-header {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-align: center;
+            padding: 14px 26px;
+            margin: 0 0 18px;
+            background: linear-gradient(135deg, #2563eb, #6d3aed);
+            border-bottom: 1px solid rgba(100, 180, 255, 0.25);
+        }
+
+        .rule-viewport {
+            min-height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .rule-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: opacity 0.38s ease, transform 0.38s ease;
+        }
+
+        .rule-content.out {
+            opacity: 0;
+            transform: translateY(-18px) perspective(400px) rotateX(20deg);
+        }
+
+        .rule-content.in {
+            opacity: 1;
+            transform: translateY(0) perspective(400px) rotateX(0deg);
+        }
+
+        .rule-num {
+            font-family: 'Lilita One', cursive;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: rgba(37, 99, 235, 0.25);
+            line-height: 1;
+        }
+
+        .rule-txt {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #1e293b;
+            text-align: center;
+            line-height: 1.55;
+        }
+
+        /* dots */
+        .rule-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 22px;
+        }
+
+        .rule-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(30, 60, 120, 0.15);
+            transition: background 0.35s, box-shadow 0.35s, transform 0.35s;
+        }
+
+        .rule-dot.on {
+            background: #2563eb;
+            box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
+            transform: scale(1.35);
+        }
+
+        /* thin progress bar */
+        .rule-bar-track {
+            width: 100%;
+            height: 2px;
+            background: rgba(30, 60, 120, 0.1);
+            border-radius: 2px;
+            margin-top: 14px;
+            overflow: hidden;
+        }
+
+        .rule-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb, #6d3aed);
+            border-radius: 2px;
+            width: 0;
+        }
+
+        .rule-bar-fill.running {
+            animation: barFill 5s linear forwards;
+        }
+
+        @keyframes barFill {
+            from { width: 0; }
+            to   { width: 100%; }
+        }
+
+        /* ── Responsive ─────────────────────────── */
+        @media (max-width: 960px) {
+            .rules-panel { display: none; }
+            .logo-area {
+                left: 50%;
+                text-align: center;
+                transform: translate(-50%, -50%);
+                transform-origin: center center;
+            }
+            @keyframes logoFloat {
+                0%, 100% { transform: translate(-50%, -50%); }
+                50%      { transform: translate(-50%, calc(-50% - 10px)); }
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text { letter-spacing: 2px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scene">
+        <div class="grid"></div>
+
+        <!-- Ambient glow -->
+        <div class="glow-spot" style="width:420px;height:420px;background:rgba(30,100,220,0.28);top:15%;left:12%"></div>
+        <div class="glow-spot" style="width:320px;height:320px;background:rgba(60,145,255,0.18);bottom:8%;right:18%;animation-delay:2.5s"></div>
+        <div class="glow-spot" style="width:260px;height:260px;background:rgba(100,185,255,0.12);top:55%;left:48%;animation-delay:4.5s"></div>
+
+        <!-- Clouds -->
+        <div id="clouds" aria-hidden="true"></div>
+
+        <!-- Soft wave at bottom -->
+        <svg class="wave" viewBox="0 0 2400 120" preserveAspectRatio="none">
+            <path d="M0,80 C300,20 600,100 900,60 C1200,20 1500,90 1800,50 C2100,10 2400,70 2400,70 L2400,120 L0,120 Z" fill="rgba(100,180,255,0.6)"/>
+        </svg>
+
+        <!-- Logo -->
+        <div class="logo-area">
+            <div class="logo-text">foroz</div>
+            <div class="logo-sub">xat.com/foroz</div>
+        </div>
+
+        <!-- Rules -->
+        <div class="rules-panel">
+            <div class="rules-card">
+                <div class="rules-header">Reglas</div>
+                <div class="rule-viewport">
+                    <div class="rule-content in" id="ruleContent">
+                        <div class="rule-num" id="ruleNum">01</div>
+                        <div class="rule-txt" id="ruleTxt"></div>
+                    </div>
+                </div>
+                <div class="rule-dots" id="ruleDots"></div>
+                <div class="rule-bar-track">
+                    <div class="rule-bar-fill" id="ruleBar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ── Rules carousel ─────────────────────── */
+        const rules = [
+            "Respeta a todos los usuarios 🤝",
+            "No spam ni flood en el chat 🚫",
+            "Contenido apropiado siempre ✨",
+            "Usa el idioma del chat 💬",
+            "No pidas rango, se gana 🌟",
+            "Diviértete y sé amable 😊",
+        ];
+
+        const INTERVAL = 5000;
+        const FADE_MS  = 380;
+
+        const elContent = document.getElementById("ruleContent");
+        const elNum     = document.getElementById("ruleNum");
+        const elTxt     = document.getElementById("ruleTxt");
+        const elDots    = document.getElementById("ruleDots");
+        const elBar     = document.getElementById("ruleBar");
+
+        let cur = 0;
+
+        // Build dots
+        rules.forEach(function (_, i) {
+            var d = document.createElement("span");
+            d.className = "rule-dot" + (i === 0 ? " on" : "");
+            elDots.appendChild(d);
+        });
+
+        function setRule(index) {
+            elNum.textContent = String(index + 1).padStart(2, "0");
+            elTxt.textContent = rules[index];
+            var dots = elDots.children;
+            for (var i = 0; i < dots.length; i++) {
+                dots[i].classList.toggle("on", i === index);
+            }
+        }
+
+        function restartBar() {
+            elBar.classList.remove("running");
+            void elBar.offsetWidth;          // reflow
+            elBar.classList.add("running");
+        }
+
+        function nextRule() {
+            // fade out
+            elContent.classList.remove("in");
+            elContent.classList.add("out");
+
+            setTimeout(function () {
+                cur = (cur + 1) % rules.length;
+                setRule(cur);
+
+                // fade in
+                elContent.classList.remove("out");
+                elContent.classList.add("in");
+
+                restartBar();
+            }, FADE_MS);
+        }
+
+        // Init
+        setRule(0);
+        restartBar();
+        setInterval(nextRule, INTERVAL);
+
+        /* ── Clouds ──────────────────────────────── */
+        var cloudsEl = document.getElementById("clouds");
+
+        var cloudSVG = '<svg viewBox="0 0 170 115" xmlns="http://www.w3.org/2000/svg">'
+            // bottom shade
+            + '<ellipse class="cloud-shade" cx="85" cy="88" rx="78" ry="25"/>'
+            // main body puffs
+            + '<ellipse class="cloud-base" cx="85" cy="82" rx="78" ry="26"/>'
+            + '<circle  class="cloud-base" cx="50" cy="60" r="32"/>'
+            + '<circle  class="cloud-base" cx="90" cy="48" r="38"/>'
+            + '<circle  class="cloud-base" cx="128" cy="60" r="28"/>'
+            + '<circle  class="cloud-base" cx="38" cy="68" r="24"/>'
+            // top highlight
+            + '<ellipse class="cloud-highlight" cx="85" cy="50" rx="34" ry="14"/>'
+            // outline
+            + '<path class="cloud-outline" d="M8,82 Q8,68 38,62 Q28,40 55,38 Q52,18 90,20 Q120,18 130,40 Q155,42 160,62 Q170,72 162,82"/>'
+            // left eye
+            + '<ellipse class="cloud-eye" cx="68" cy="72" rx="5" ry="6.5"/>'
+            + '<circle class="cloud-eye-shine" cx="66" cy="69" r="2"/>'
+            // right eye
+            + '<ellipse class="cloud-eye" cx="105" cy="72" rx="5" ry="6.5"/>'
+            + '<circle class="cloud-eye-shine" cx="103" cy="69" r="2"/>'
+            + '</svg>';
+
+        var sizes = ["sm", "md", "lg"];
+        var cloudSlots = [
+            { top: "5%",  delay: 0,  dur: 55 },
+            { top: "18%", delay: 12, dur: 70 },
+            { top: "32%", delay: 28, dur: 50 },
+            { top: "48%", delay: 6,  dur: 65 },
+            { top: "60%", delay: 20, dur: 58 },
+            { top: "10%", delay: 35, dur: 75 },
+        ];
+
+        cloudSlots.forEach(function (slot, i) {
+            var c = document.createElement("div");
+            var sz = sizes[i % sizes.length];
+            c.className = "cloud " + sz;
+            c.innerHTML = '<div class="cloud-body">' + cloudSVG + '</div>';
+            c.style.top = slot.top;
+            c.style.left = "-200px";
+            c.style.opacity = 0.7 + Math.random() * 0.3;
+            c.style.animationDuration = slot.dur + "s";
+            c.style.animationDelay = slot.delay + "s";
+            cloudsEl.appendChild(c);
+        });
+    </script>
+</body>
+</html>
