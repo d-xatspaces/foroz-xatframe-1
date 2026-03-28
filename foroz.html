@@ -212,7 +212,7 @@
         /* ── Logo ───────────────────────────────── */
         .logo-area {
             position: absolute;
-            left: 8%;
+            left: 5%;
             top: 50%;
             transform: translateY(-50%) perspective(800px) rotateY(10deg);
             transform-origin: right center;
@@ -263,7 +263,7 @@
         .rules-panel {
             position: absolute;
             top: 50%;
-            right: clamp(24px, 4vw, 64px);
+            right: 5%;
             transform: translateY(-50%) perspective(800px) rotateY(-10deg);
             transform-origin: left center;
             width: clamp(270px, 22vw, 370px);
@@ -307,11 +307,12 @@
         }
 
         .rule-viewport {
-            min-height: 130px;
+            height: 200px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             overflow: hidden;
+            padding: 0 22px;
         }
 
         .rule-content {
@@ -319,6 +320,7 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
+            padding-top: 10px;
             transition: opacity 0.38s ease, transform 0.38s ease;
         }
 
@@ -345,7 +347,7 @@
             font-size: 1.05rem;
             font-weight: 600;
             color: #1e293b;
-            text-align: center;
+            text-align: justify;
             line-height: 1.55;
         }
 
@@ -363,6 +365,7 @@
             border-radius: 50%;
             background: rgba(30, 60, 120, 0.15);
             transition: background 0.35s, box-shadow 0.35s, transform 0.35s;
+            cursor: pointer;
         }
 
         .rule-dot.on {
@@ -389,7 +392,7 @@
         }
 
         .rule-bar-fill.running {
-            animation: barFill 5s linear forwards;
+            animation: barFill 10s linear forwards;
         }
 
         @keyframes barFill {
@@ -507,15 +510,13 @@
     <script>
         /* ── Rules carousel ─────────────────────── */
         const rules = [
-            "Respeta a todos los usuarios 🤝",
-            "No spam ni flood en el chat 🚫",
-            "Contenido apropiado siempre ✨",
-            "Usa el idioma del chat 💬",
-            "No pidas rango, se gana 🌟",
-            "Diviértete y sé amable 😊",
+            "Spam: Prohibido, lo que incluye, pero no se limita a, mensajes, links, GIFs y emojis repetitivos.",
+            "Datos personales: No se debe revelar información personal, incluida, pero no limitada a, la de los usuarios de Foroz o sus familiares.",
+            "Clonación: Prohibido clonar cuentas de usuario.",
+            "Contenido NSFW: Está totalmente prohibido compartir contenido explícito que involucre a menores de edad, incluido, pero no limitado a, imágenes, videos, audios y mensajes.",
         ];
 
-        const INTERVAL = 5000;
+        const INTERVAL = 10000;
         const FADE_MS  = 380;
 
         const elContent = document.getElementById("ruleContent");
@@ -530,6 +531,9 @@
         rules.forEach(function (_, i) {
             var d = document.createElement("span");
             d.className = "rule-dot" + (i === 0 ? " on" : "");
+            d.addEventListener("click", function () {
+                goToRule(i);
+            });
             elDots.appendChild(d);
         });
 
@@ -565,10 +569,25 @@
             }, FADE_MS);
         }
 
+        function goToRule(index) {
+            if (index === cur) return;
+            clearInterval(autoTimer);
+            elContent.classList.remove("in");
+            elContent.classList.add("out");
+            setTimeout(function () {
+                cur = index;
+                setRule(cur);
+                elContent.classList.remove("out");
+                elContent.classList.add("in");
+                restartBar();
+            }, FADE_MS);
+            autoTimer = setInterval(nextRule, INTERVAL);
+        }
+
         // Init
         setRule(0);
         restartBar();
-        setInterval(nextRule, INTERVAL);
+        var autoTimer = setInterval(nextRule, INTERVAL);
 
         /* ── Clouds ──────────────────────────────── */
         var cloudsEl = document.getElementById("clouds");
