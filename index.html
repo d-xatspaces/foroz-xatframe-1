@@ -194,14 +194,17 @@
 
         .hill-back {
             height: 450px;
+            z-index: 4;
         }
 
         .hill-mid {
             height: 380px;
+            z-index: 6;
         }
 
         .hill-front {
             height: 280px;
+            z-index: 8;
         }
 
         @keyframes hillScroll {
@@ -632,12 +635,15 @@
 
         var sizes = ["sm", "md", "lg"];
         var cloudSlots = [
-            { top: "5%",  delay: 0,  dur: 55 },
-            { top: "12%", delay: 12, dur: 70 },
-            { top: "8%",  delay: 35, dur: 75 },
-            { top: "48%", delay: 6,  dur: 65 },
-            { top: "55%", delay: 28, dur: 50 },
-            { top: "63%", delay: 20, dur: 58 },
+            { top: "3%",  delay: 0,  dur: 55, z: 3 },
+            { top: "8%",  delay: 12, dur: 70, z: 3 },
+            { top: "6%",  delay: 35, dur: 75, z: 3 },
+            { top: "48%", delay: 6,  dur: 65, z: 5 },
+            { top: "55%", delay: 28, dur: 50, z: 7 },
+            { top: "63%", delay: 20, dur: 58, z: 9 },
+            { top: "82%", delay: 8,  dur: 60, z: 9 },
+            { top: "88%", delay: 22, dur: 68, z: 9 },
+            { top: "85%", delay: 40, dur: 55, z: 9 },
         ];
 
         cloudSlots.forEach(function (slot, i) {
@@ -648,6 +654,7 @@
             c.style.top = slot.top;
             c.style.left = "-200px";
             c.style.opacity = 0.7 + Math.random() * 0.3;
+            c.style.zIndex = slot.z;
             c.style.animationDuration = slot.dur + "s";
             c.style.animationDelay = slot.delay + "s";
             cloudsEl.appendChild(c);
