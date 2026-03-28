@@ -167,19 +167,44 @@
             100% { transform: translateX(calc(100vw + 200px)); }
         }
 
-        /* ── Soft wave decoration ───────────────── */
-        .wave {
+        /* ── Mario hills (parallax) ─────────── */
+        .hills {
             position: absolute;
-            bottom: -2px;
+            bottom: 0;
             left: 0;
-            width: 200%;
-            height: 120px;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            opacity: 0.08;
-            animation: waveSlide 18s linear infinite;
+            overflow: hidden;
         }
 
-        @keyframes waveSlide {
+        .hill-layer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .hill-layer svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .hill-back {
+            height: 450px;
+        }
+
+        .hill-mid {
+            height: 380px;
+        }
+
+        .hill-front {
+            height: 280px;
+        }
+
+        @keyframes hillScroll {
             0%   { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
@@ -400,26 +425,26 @@
         <div class="sun">
             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <!-- Outer glow -->
-                <circle cx="50" cy="50" r="48" fill="rgba(160, 210, 255, 0.08)"/>
+                <circle cx="50" cy="50" r="48" fill="rgba(200, 230, 255, 0.25)"/>
                 <!-- Main body -->
-                <circle cx="50" cy="50" r="36" fill="rgba(200, 230, 255, 0.35)"/>
+                <circle cx="50" cy="50" r="36" fill="#d0e6ff"/>
                 <circle cx="50" cy="50" r="36" fill="url(#sunGrad)" />
                 <!-- Inner highlight -->
-                <ellipse cx="44" cy="40" rx="18" ry="14" fill="rgba(255, 255, 255, 0.2)"/>
+                <ellipse cx="44" cy="40" rx="18" ry="14" fill="rgba(255, 255, 255, 0.45)"/>
                 <!-- Face -->
-                <circle cx="40" cy="48" r="3" fill="rgba(30, 70, 150, 0.4)"/>
-                <circle cx="60" cy="48" r="3" fill="rgba(30, 70, 150, 0.4)"/>
-                <circle cx="39" cy="46" r="1.2" fill="rgba(255,255,255,0.6)"/>
-                <circle cx="59" cy="46" r="1.2" fill="rgba(255,255,255,0.6)"/>
+                <circle cx="40" cy="48" r="3" fill="rgba(30, 60, 140, 0.7)"/>
+                <circle cx="60" cy="48" r="3" fill="rgba(30, 60, 140, 0.7)"/>
+                <circle cx="39" cy="46" r="1.2" fill="rgba(255,255,255,0.85)"/>
+                <circle cx="59" cy="46" r="1.2" fill="rgba(255,255,255,0.85)"/>
                 <!-- Smile -->
-                <path d="M42,57 Q50,65 58,57" fill="none" stroke="rgba(30, 70, 150, 0.35)" stroke-width="2" stroke-linecap="round"/>
+                <path d="M42,57 Q50,65 58,57" fill="none" stroke="rgba(30, 60, 140, 0.55)" stroke-width="2" stroke-linecap="round"/>
                 <!-- Cheeks -->
-                <ellipse cx="35" cy="56" rx="5" ry="3" fill="rgba(140, 190, 255, 0.2)"/>
-                <ellipse cx="65" cy="56" rx="5" ry="3" fill="rgba(140, 190, 255, 0.2)"/>
+                <ellipse cx="35" cy="56" rx="5" ry="3" fill="rgba(140, 190, 255, 0.4)"/>
+                <ellipse cx="65" cy="56" rx="5" ry="3" fill="rgba(140, 190, 255, 0.4)"/>
                 <defs>
                     <radialGradient id="sunGrad" cx="40%" cy="38%" r="55%">
-                        <stop offset="0%" stop-color="rgba(220, 240, 255, 0.6)"/>
-                        <stop offset="100%" stop-color="rgba(140, 200, 255, 0.25)"/>
+                        <stop offset="0%" stop-color="rgba(235, 245, 255, 0.9)"/>
+                        <stop offset="100%" stop-color="rgba(170, 215, 255, 0.7)"/>
                     </radialGradient>
                 </defs>
             </svg>
@@ -433,10 +458,27 @@
         <!-- Clouds -->
         <div id="clouds" aria-hidden="true"></div>
 
-        <!-- Soft wave at bottom -->
-        <svg class="wave" viewBox="0 0 2400 120" preserveAspectRatio="none">
-            <path d="M0,80 C300,20 600,100 900,60 C1200,20 1500,90 1800,50 C2100,10 2400,70 2400,70 L2400,120 L0,120 Z" fill="rgba(100,180,255,0.6)"/>
-        </svg>
+        <!-- Hills -->
+        <div class="hills">
+            <!-- Back layer -->
+            <div class="hill-layer hill-back">
+                <svg viewBox="0 0 1920 450" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,450 L0,200 L60,140 L100,100 L140,130 L200,190 L280,230 L350,260 L420,270 L490,110 L520,80 L555,130 L610,155 L680,210 L740,300 L830,285 L920,250 L960,180 L1040,195 L1100,140 L1150,40 L1195,90 L1230,65 L1280,135 L1340,250 L1410,275 L1500,310 L1580,320 L1660,300 L1720,160 L1750,120 L1790,145 L1830,175 L1920,300 L1920,450 Z" fill="rgba(15, 45, 100, 0.7)"/>
+                </svg>
+            </div>
+            <!-- Mid layer -->
+            <div class="hill-layer hill-mid">
+                <svg viewBox="0 0 1920 380" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,380 L0,160 L40,120 L80,80 L115,110 L160,155 L230,200 L300,230 L370,85 L400,60 L440,100 L510,170 L590,225 L680,250 L780,265 L860,245 L940,100 L1000,50 L1045,80 L1100,140 L1180,210 L1260,235 L1350,195 L1430,150 L1530,70 L1580,45 L1600,30 L1635,65 L1700,180 L1780,250 L1850,255 L1920,275 L1920,380 Z" fill="rgba(10, 35, 80, 0.8)"/>
+                </svg>
+            </div>
+            <!-- Front layer -->
+            <div class="hill-layer hill-front">
+                <svg viewBox="0 0 1920 280" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,280 L0,120 L35,80 L70,50 L105,75 L150,120 L220,160 L300,195 L380,165 L460,75 L500,40 L530,70 L575,115 L660,175 L780,200 L900,190 L1020,155 L1120,90 L1250,35 L1300,20 L1330,50 L1380,105 L1470,165 L1560,195 L1640,180 L1720,160 L1790,175 L1860,195 L1920,210 L1920,280 Z" fill="rgba(6, 25, 60, 0.9)"/>
+                </svg>
+            </div>
+        </div>
 
         <!-- Logo -->
         <div class="logo-area">
