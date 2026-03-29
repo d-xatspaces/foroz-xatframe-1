@@ -216,7 +216,7 @@
         .logo-area {
             position: absolute;
             left: 5%;
-            top: 50%;
+            top: calc(50% - 100px);
             transform: translateY(-50%) perspective(800px) rotateY(10deg);
             transform-origin: right center;
             z-index: 5;
@@ -267,12 +267,13 @@
         @keyframes logoFloat {
             0%, 100% { transform: translateY(-50%) perspective(800px) rotateY(10deg); }
             50%      { transform: translateY(calc(-50% - 10px)) perspective(800px) rotateY(10deg); }
+            50%      { transform: translateY(calc(-50% - 10px)) perspective(800px) rotateY(10deg); }
         }
 
         /* ── Rules panel ────────────────────────── */
         .rules-panel {
             position: absolute;
-            top: 50%;
+            top: calc(50% - 100px);
             right: 5%;
             transform: translateY(-50%) perspective(800px) rotateY(-10deg);
             transform-origin: left center;
